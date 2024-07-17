@@ -87,34 +87,34 @@ export class AuthMockApi
         // -----------------------------------------------------------------------------------------------------
         // @ Sign in using the access token - POST
         // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPost('api/auth/sign-in-with-token')
-            .reply(({request}) =>
-            {
-                // Get the access token
-                const accessToken = request.body.accessToken;
+        // this._fuseMockApiService
+        //     .onPost('api/auth/sign-in-with-token')
+        //     .reply(({request}) =>
+        //     {
+        //         // Get the access token
+        //         const accessToken = request.body.accessToken;
 
-                // Verify the token
-                if ( this._verifyJWTToken(accessToken) )
-                {
-                    return [
-                        200,
-                        {
-                            user       : cloneDeep(this._user),
-                            accessToken: this._generateJWTToken(),
-                            tokenType  : 'bearer',
-                        },
-                    ];
-                }
+        //         // Verify the token
+        //         if ( this._verifyJWTToken(accessToken) )
+        //         {
+        //             return [
+        //                 200,
+        //                 {
+        //                     user       : cloneDeep(this._user),
+        //                     accessToken: this._generateJWTToken(),
+        //                     tokenType  : 'bearer',
+        //                 },
+        //             ];
+        //         }
 
-                // Invalid token
-                return [
-                    401,
-                    {
-                        error: 'Invalid token',
-                    },
-                ];
-            });
+        //         // Invalid token
+        //         return [
+        //             200,
+        //             {
+        //                 error: 'Invalid token',
+        //             },
+        //         ];
+        //     });
 
         // -----------------------------------------------------------------------------------------------------
         // @ Sign up - POST
