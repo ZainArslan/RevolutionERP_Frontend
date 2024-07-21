@@ -1,5 +1,5 @@
 <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
-    <app-listing-header [pageTitle]="'Company'"></app-listing-header>
+    <app-listing-header [pageTitle]="'Company'" [redirectButtonTitle]="'Add'" (handleRedirectClick)="goToForm()"></app-listing-header>
 
     <div class="p-3 flex flex-auto overflow-hidden">
         <div class="">

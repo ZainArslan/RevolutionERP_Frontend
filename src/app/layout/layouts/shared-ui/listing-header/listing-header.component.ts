@@ -16,14 +16,15 @@ import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/f
 export class ListingHeaderComponent {
 
   @Input() pageTitle: string;
+  @Input() searchEnabled: boolean=true;
+  @Input() redirectButtonTitle: string;
   @Output() searchValue: EventEmitter<string> = new EventEmitter<string>();
-  @Output() handleAddNewClick: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() handleRedirectClick: EventEmitter<boolean> = new EventEmitter<boolean>();
   isLoading;
   searchInputControl: UntypedFormControl = new UntypedFormControl();
   constructor() { }
 
-  AddNewClicked() {
-    console.log("createProduct");
-    this.handleAddNewClick.emit(true)
+  handleRedirect() {
+    this.handleRedirectClick.emit(true)
   }
 }

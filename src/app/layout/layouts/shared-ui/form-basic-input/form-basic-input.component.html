@@ -1,0 +1,6 @@
+<mat-form-field [ngClass]="formFieldHelpers" class="flex-auto gt-xs:pr-3">
+    <mat-label>{{ label }}</mat-label>
+    <input matInput  [formControl]="formControl">
+    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+    <mat-error *ngIf="formControl.invalid">{{ getErrorMessage() }}</mat-error>
+</mat-form-field>

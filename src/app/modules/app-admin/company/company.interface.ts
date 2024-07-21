@@ -12,3 +12,17 @@ export interface Company {
     countryId: number;
     status: boolean;
 }
+
+export interface Organization {
+    organizationId: number;
+    organizationName: string;
+    organizationCode: string;
+    registrationNo: string;
+    email: string;
+    phone: string;
+    address: string;
+    cityId: number;
+    provinceId: number;
+    countryId: number;
+    status: boolean;
+}

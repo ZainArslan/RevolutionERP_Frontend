@@ -1,1 +1,80 @@
-<p>company-form works!</p>
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-auto bg-card dark:bg-transparent">
+    <app-listing-header [pageTitle]="'Company'" [redirectButtonTitle]="'Cancel'"
+        (handleRedirectClick)="redirectToListing()" [searchEnabled]="false"></app-listing-header>
+
+    <div class="p-3 flex-auto">
+        <form [formGroup]="companyForm" (ngSubmit)="handleFormSubmit()"
+            class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Organization</mat-label>
+                        <mat-select formControlName="organizationId">
+                            <mat-option value="null">select Organization</mat-option>
+                            <mat-option *ngFor="let org of organizationsList"
+                                [value]="org?.organizationId">{{org?.organizationName}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="w-full">
+                        <mat-label>Company Name</mat-label>
+                        <input matInput formControlName="companyName">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="w-full">
+                        <mat-label>Company Code</mat-label>
+                        <input matInput formControlName="companyCode">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="w-full">
+                        <mat-label>Registration No</mat-label>
+                        <input matInput formControlName="registrationNo">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="w-full">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="w-full">
+                        <mat-label>Phone</mat-label>
+                        <input matInput formControlName="phone">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="w-full">
+                        <mat-label>Address</mat-label>
+                        <input matInput formControlName="address">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="w-full">
+                        <mat-label>City</mat-label>
+                        <input matInput formControlName="cityId">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="w-full">
+                        <mat-label>Province</mat-label>
+                        <input matInput formControlName="provinceId">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="w-full">
+                        <mat-label>Country</mat-label>
+                        <input matInput formControlName="countryId">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button type="submit" mat-raised-button color="primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
