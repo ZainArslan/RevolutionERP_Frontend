@@ -88,39 +88,32 @@ export class AuthService {
     // /**
     //  * Sign in using the access token
     //  */
-    // signInUsingToken(): Observable<any> {
-    //     // Sign in using the token
-    //     return this._httpClient.post('api/auth/sign-in-with-token', {
-    //         accessToken: this.accessToken,
-    //     }).pipe(
-    //         catchError(() =>
+    signInUsingToken(): Observable<any> {
+        // Sign in using the token
+        return this._httpClient.post('api/auth/sign-in-with-token', {
+            accessToken: this.accessToken,
+        }).pipe(
+            catchError(() =>
 
-    //             // Return false
-    //             of(false),
-    //         ),
-    //         switchMap((response: any) => {
-    //             // Replace the access token with the new one if it's available on
-    //             // the response object.
-    //             //
-    //             // This is an added optional step for better security. Once you sign
-    //             // in using the token, you should generate a new one on the server
-    //             // side and attach it to the response object. Then the following
-    //             // piece of code can replace the token with the refreshed one.
-    //             if (response.accessToken) {
-    //                 this.accessToken = response.accessToken;
-    //             }
+                // Return false
+                of(false),
+            ),
+            switchMap((response: any) => {
+                if (response.accessToken) {
+                    this.accessToken = response.accessToken;
+                }
 
-    //             // Set the authenticated flag to true
-    //             this._authenticated = true;
+                // Set the authenticated flag to true
+                this._authenticated = true;
 
-    //             // Store the user on the user service
-    //             this._userService.user = response.user;
+                // Store the user on the user service
+                this._userService.user = response.user;
 
-    //             // Return true
-    //             return of(true);
-    //         }),
-    //     );
-    // }
+                // Return true
+                return of(true);
+            }),
+        );
+    }
 
     /**
      * Sign out
@@ -174,6 +167,6 @@ export class AuthService {
         }
 
         // If the access token exists, and it didn't expire, sign in using it
-        // return this.signInUsingToken();
+        return this.signInUsingToken();
     }
 }
