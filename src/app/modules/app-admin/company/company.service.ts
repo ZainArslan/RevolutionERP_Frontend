@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Company, Organization } from './company.interface';
 import { environment } from 'environments/environment.development';
@@ -12,6 +12,15 @@ export class CompanyService {
     getCompanies() {
         const url = `${environment.apiUrl}Companys/GetAllCompanies`;
         return this.http.get<Company[]>(url);
+        // return this.http.get<any>(url);
+    }
+
+    getCompaniesById(id: number) {
+        let params = new HttpParams().set('id', id.toString());
+        return this.http.get<any>(
+            `${environment.apiUrl}Companys/GetCompanyById`,
+            { params }
+        );
     }
 
     getAllOrganizations() {
@@ -20,7 +29,13 @@ export class CompanyService {
         );
     }
 
-    saveComapny(Company: Company) {
+    saveCompany(Company: Company) {
         return this.http.post(`${environment.apiUrl}Companys/Insert`, Company);
+    }
+
+    deleteCompanyById(id: number) {
+        return this.http.delete(`${environment.apiUrl}Companys/Delete`, {
+            params: new HttpParams().set('id', id.toString()),
+        });
     }
 }

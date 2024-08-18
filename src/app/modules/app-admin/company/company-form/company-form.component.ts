@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListingHeaderComponent } from 'app/layout/layouts/shared-ui/listing-header/listing-header.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
     FormBuilder,
@@ -19,8 +19,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { CompanyService } from '../company.service';
-import { Subject, takeUntil } from 'rxjs';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { Organization } from '../company.interface';
+import { SWALMIXIN } from 'app/core/services/mixin.service';
 
 @Component({
     selector: 'app-company-form',
@@ -48,11 +49,13 @@ export class CompanyFormComponent implements OnInit {
     companyForm: FormGroup;
     viewInit: boolean = false;
     organizationsList: Organization[] = [];
+    companyId: number;
     private _unsubscribeAll: Subject<void> = new Subject<void>();
     constructor(
         private router: Router,
         private fb: FormBuilder,
-        private companyService: CompanyService
+        private companyService: CompanyService,
+        private activatedRoute: ActivatedRoute
     ) {
         this.companyForm = this.fb.group({
             organizationId: ['', Validators.required],
@@ -62,20 +65,48 @@ export class CompanyFormComponent implements OnInit {
             address: ['', Validators.required],
             companyCode: [''],
             registrationNo: [''],
-            cityId: [''],
-            provinceId: [''],
-            countryId: [''],
+            cityName: [''],
+            province: [''],
+            country: [''],
+            // referencePerson
+            ReferencePersonName: ['', Validators.required],
+            Password: [''],
+            FirstName: [''],
+            LastName: [''],
             status: [true],
+            loginUserId: [1],
         });
     }
 
-    ngOnInit(): void {
+    async ngOnInit() {
+        const params = await firstValueFrom(this.activatedRoute.queryParams);
+        if (params.id) {
+            this.companyId = params.id;
+            this.getDataById();
+        }
         this.getAllOrganizations();
     }
 
     ngOnDestroy(): void {
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
+    }
+
+    getDataById() {
+        this.companyService
+            .getCompaniesById(this.companyId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe({
+                next: (resp) => {
+                    this.companyForm.patchValue(resp)
+                },
+                error: (err) => {
+                    SWALMIXIN.fire({
+                        icon: 'error',
+                        title: err.error.message || err.message,
+                    });
+                },
+            });
     }
 
     getAllOrganizations() {
@@ -88,7 +119,10 @@ export class CompanyFormComponent implements OnInit {
                     console.log('resp: ', resp);
                 },
                 error: (err) => {
-                    console.log('err', err);
+                    SWALMIXIN.fire({
+                        icon: 'error',
+                        title: err.error.message || err.message,
+                    });
                 },
             });
     }
@@ -100,21 +134,33 @@ export class CompanyFormComponent implements OnInit {
     handleFormSubmit() {
         if (this.companyForm.invalid) {
             this.companyForm.markAllAsTouched();
+            SWALMIXIN.fire({
+                icon: 'warning',
+                title: 'Fill all required fields',
+            });
+            return;
+        }
+        if(!this.companyForm.value.Password || !this.companyForm.value.FirstName|| !this.companyForm.value.LastName ){
+            SWALMIXIN.fire({
+                icon: 'warning',
+                title: !this.companyForm.value.Password?'Password is required':!this.companyForm.value.FirstName?'Firstname is required':!this.companyForm.value.LastName?'Last name is requred':'Fill all required fields',
+            });
             return;
         }
 
         this.companyService
-            .saveComapny(this.companyForm.value)
+            .saveCompany(this.companyForm.value)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe({
                 next: (resp) => {
                     this.redirectToListing();
                 },
                 error: (err) => {
-                    console.log('err', err);
+                    SWALMIXIN.fire({
+                        icon: 'error',
+                        title: err.error.message || err.message,
+                    });
                 },
             });
-
-        console.log('call apin');
     }
 }

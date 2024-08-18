@@ -7,10 +7,16 @@ export interface Company {
     email: string;
     phone: string;
     address: string;
-    cityId: number;
-    provinceId: number;
-    countryId: number;
+    cityName: number;
+    province: number;
+    country: number;
     status: boolean;
+    CompanyImage?:string;
+    ReferencePersonName?:string;
+    Password?:string;
+    FirstName?:string;
+    LastName?:string;
+    LoginUserId?:string;
 }
 
 export interface Organization {
@@ -26,3 +32,14 @@ export interface Organization {
     countryId: number;
     status: boolean;
 }
+
+export const displayedColumns: string[] = [
+    'companyName',
+    'companyCode',
+    'registrationNo',
+    'email',
+    'phone',
+    'address',
+    'status',
+    'action',
+];
