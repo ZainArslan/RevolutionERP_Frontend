@@ -71,10 +71,10 @@ export class AuthService {
             switchMap((response: any) => {
                 // this.accessToken = response.accessToken;
                 console.log("response: ", response);
-                this.accessToken = response.token;
+                this.accessToken = response?.token?.result;
                 // // Set the authenticated flag to true
                 this._authenticated = true;
-                localStorage.setItem("user", JSON.stringify(response?.user[0]))
+                localStorage.setItem("user", JSON.stringify(response?.user))
 
                 // // Store the user on the user service
                 this._userService.user = response.user[0];
