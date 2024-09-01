@@ -11,12 +11,6 @@ export interface Company {
     province: number;
     country: number;
     status: boolean;
-    CompanyImage?:string;
-    ReferencePersonName?:string;
-    Password?:string;
-    FirstName?:string;
-    LastName?:string;
-    LoginUserId?:string;
 }
 
 export interface Organization {
@@ -42,4 +36,63 @@ export const displayedColumns: string[] = [
     'address',
     'status',
     'action',
+];
+
+export const dummyData: Company[] = [
+    {
+        companyId: 1,
+        organizationId: 1,
+        companyName: 'Testing',
+        companyCode: 'string',
+        registrationNo: 'string',
+        email: 'string',
+        phone: 'string',
+        address: 'string',
+        cityName: 1,
+        province: 2,
+        country: 2,
+        status: true,
+    },
+    {
+        companyId: 1,
+        organizationId: 1,
+        companyName: 'Testing',
+        companyCode: 'string',
+        registrationNo: 'string',
+        email: 'string',
+        phone: 'string',
+        address: 'string',
+        cityName: 1,
+        province: 2,
+        country: 2,
+        status: true,
+    },
+    {
+        companyId: 1,
+        organizationId: 1,
+        companyName: 'Testing',
+        companyCode: 'string',
+        registrationNo: 'string',
+        email: 'string',
+        phone: 'string',
+        address: 'string',
+        cityName: 1,
+        province: 2,
+        country: 2,
+        status: true,
+    },
+    {
+        companyId: 1,
+        organizationId: 1,
+        companyName: 'Testing',
+        companyCode: 'string',
+        registrationNo: 'string',
+        email: 'string',
+        phone: 'string',
+        address: 'string',
+        cityName: 1,
+        province: 2,
+        country: 2,
+        status: true,
+    },
 ];

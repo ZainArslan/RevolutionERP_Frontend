@@ -68,13 +68,7 @@ export class CompanyFormComponent implements OnInit {
             cityName: [''],
             province: [''],
             country: [''],
-            // referencePerson
-            ReferencePersonName: ['', Validators.required],
-            Password: [''],
-            FirstName: [''],
-            LastName: [''],
             status: [true],
-            loginUserId: [1],
         });
     }
 
@@ -98,12 +92,12 @@ export class CompanyFormComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe({
                 next: (resp) => {
-                    this.companyForm.patchValue(resp)
+                    console.log('resp: ', resp);
                 },
                 error: (err) => {
                     SWALMIXIN.fire({
                         icon: 'error',
-                        title: err.error.message || err.message,
+                        title: 'Please add customer basic detail first',
                     });
                 },
             });
@@ -121,7 +115,7 @@ export class CompanyFormComponent implements OnInit {
                 error: (err) => {
                     SWALMIXIN.fire({
                         icon: 'error',
-                        title: err.error.message || err.message,
+                        title: 'Please add customer basic detail first',
                     });
                 },
             });
@@ -134,17 +128,6 @@ export class CompanyFormComponent implements OnInit {
     handleFormSubmit() {
         if (this.companyForm.invalid) {
             this.companyForm.markAllAsTouched();
-            SWALMIXIN.fire({
-                icon: 'warning',
-                title: 'Fill all required fields',
-            });
-            return;
-        }
-        if(!this.companyForm.value.Password || !this.companyForm.value.FirstName|| !this.companyForm.value.LastName ){
-            SWALMIXIN.fire({
-                icon: 'warning',
-                title: !this.companyForm.value.Password?'Password is required':!this.companyForm.value.FirstName?'Firstname is required':!this.companyForm.value.LastName?'Last name is requred':'Fill all required fields',
-            });
             return;
         }
 
@@ -158,7 +141,7 @@ export class CompanyFormComponent implements OnInit {
                 error: (err) => {
                     SWALMIXIN.fire({
                         icon: 'error',
-                        title: err.error.message || err.message,
+                        title: 'Please add customer basic detail first',
                     });
                 },
             });

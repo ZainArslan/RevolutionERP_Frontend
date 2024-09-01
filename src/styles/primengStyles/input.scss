@@ -1,0 +1,31 @@
+/* Apply to PrimeNG input components */
+.p-inputtext,
+.p-dropdown,
+.p-multiselect,
+.p-calendar,
+.p-checkbox label,
+.p-radiobutton label,
+.p-editor {
+    font-family: "Inter var", sans-serif !important;
+    font-size: 0.875rem !important;
+}
+
+/* Additional input types */
+.p-inputtext,
+.p-dropdown-label,
+.p-dropdown-item,
+.p-multiselect-label,
+.p-multiselect-item,
+.p-calendar-input,
+.p-checkbox-label,
+.p-radiobutton-label,
+.p-editor-content {
+    font-family: "Inter var", sans-serif !important;
+    font-size: 0.875rem !important;
+}
+
+
+/* Apply to PrimeNG text-based input components */
+.p-inputtext{
+    padding: 0.55rem 0.55rem !important;
+}

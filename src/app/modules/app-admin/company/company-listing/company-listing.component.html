@@ -1,75 +1,177 @@
-<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-auto bg-card dark:bg-transparent">
     <app-listing-header [pageTitle]="'Company'" [redirectButtonTitle]="'Add'"
         (handleRedirectClick)="goToForm()"></app-listing-header>
 
-    <div class="p-3 flex-auto overflow-hidden">
-        <div class="">
+    <div class="container px-4">
+        <div class="pt-5">
+            <div class="card">
+                <div class="card">
+                    <p-table #dt2 [value]="companies" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+                        [loading]="isLoadingData" [paginator]="true"
+                        [globalFilterFields]="['companyName', 'companyCode', 'registrationNo', 'email','phone','address','cityName','province','country']"
+                        [tableStyle]="{ 'min-width': '75rem' }">
+                        <ng-template pTemplate="caption">
+                            <div class="flex justify-between items-center  ">
+                                <i class="pi pi-filter" (click)="toggleFilters()"></i>
+                                <p-iconField iconPosition="left" class="ml-auto">
+                                    <input pInputText type="text"
+                                        (input)="dt2.filterGlobal($event.target.value, 'contains')"
+                                        placeholder="Search keyword" />
+                                </p-iconField>
+                            </div>
+                        </ng-template>
 
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:22%">Name</th>
+                                <th style="width:22%">Code</th>
+                                <th style="width:22%">Reg.No</th>
+                                <th style="width:22%">Email</th>
+                                <th style="width:22%">phone</th>
+                                <th style="width:12%">address</th>
+                                <th style="width:12%">cityName</th>
+                                <th style="width:12%">province</th>
+                                <th style="width:12%">country</th>
+                                <th style="width:12%">status</th>
+                                <th style="width:22%">Action</th>
+                            </tr>
+                            <tr *ngIf="filtersVisible">
+                                <th>
+                                    <p-columnFilter type="text" field="companyName" placeholder="Search by name"
+                                        ariaLabel="Filter Name" />
+                                </th>
+                                <th>
+                                    <p-columnFilter type="text" field="companyCode" placeholder="Search by Company code"
+                                        ariaLabel="" />
+                                </th>
+                                <th>
+                                    <p-columnFilter type="text" field="" placeholder="Search by country"
+                                        ariaLabel="Filter Country" />
+                                </th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-company>
+                            <tr>
+                                <td>
+                                    {{ company.companyName }}
+                                </td>
+                                <td>
+                                    <span class="ml-1 vertical-align-middle">
+                                        {{ company.companyCode }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="ml-1 vertical-align-middle">
+                                        {{ company.representative.name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="ml-1 vertical-align-middle">
+                                        {{ company.companyCode }}
+                                    </span>
+                                    <!-- <p-tag [value]="company.status" [severity]="getSeverity(company.status)" /> -->
+                                </td>
+                                <td>
+                                    <i class="pi"
+                                        [ngClass]="{ 'text-green-500 pi-check-circle': company.status, 'text-red-500 pi-times-circle': !company.status }"></i>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="5">No customers found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
 
-            <Button label="Submit" >asdfasdf</Button>
-
-
-
-            <table mat-table [dataSource]="companies" class="mat-elevation-z8">
-
-                <!-- Name Column -->
-                <ng-container matColumnDef="companyName">
-                    <th mat-header-cell *matHeaderCellDef>Name</th>
-                    <td mat-cell *matCellDef="let company">{{ company.companyName }}</td>
-                </ng-container>
-
-                <!-- Company Code Column -->
-                <ng-container matColumnDef="companyCode">
-                    <th mat-header-cell *matHeaderCellDef>Company Code</th>
-                    <td mat-cell *matCellDef="let company">{{ company.companyCode }}</td>
-                </ng-container>
-
-                <!-- Registration Number Column -->
-                <ng-container matColumnDef="registrationNo">
-                    <th mat-header-cell *matHeaderCellDef>Registration Number</th>
-                    <td mat-cell *matCellDef="let company">{{ company.registrationNo }}</td>
-                </ng-container>
-
-                <!-- Email Column -->
-                <ng-container matColumnDef="email">
-                    <th mat-header-cell *matHeaderCellDef>Email</th>
-                    <td mat-cell *matCellDef="let company">{{ company.email }}</td>
-                </ng-container>
-
-                <!-- Phone Column -->
-                <ng-container matColumnDef="phone">
-                    <th mat-header-cell *matHeaderCellDef>Phone</th>
-                    <td mat-cell *matCellDef="let company">{{ company.phone }}</td>
-                </ng-container>
-
-                <!-- Address Column -->
-                <ng-container matColumnDef="address">
-                    <th mat-header-cell *matHeaderCellDef>Address</th>
-                    <td mat-cell *matCellDef="let company">{{ company.address }}</td>
-                </ng-container>
-
-                <!-- Status Column -->
-                <ng-container matColumnDef="status">
-                    <th mat-header-cell *matHeaderCellDef>Status</th>
-                    <td mat-cell *matCellDef="let company">{{ company.status ? 'Active' : 'Inactive' }}</td>
-                </ng-container>
-
-                <!-- Action Column -->
-                <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef>Action</th>
-                    <td mat-cell *matCellDef="let company">
-                        <div class="flex ">
-                            <button type="button mr-2" mat-raised-button color="primary"
-                                (click)="goToForm(company?.companyId)">Edit</button>
-                            <button type="button" (click)="deleteCompany(company?.companyId)" mat-raised-button
-                                color="warn">Delete</button>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
+            </div>
         </div>
     </div>
+    <!-- <div class="container px-4">
+        <div class="pt-5">
+            <div class="card">
+                <div class="card">
+                    <p-table #dt2 [value]="customers" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+                        [loading]="loading" [paginator]="true"
+                        [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+                        [tableStyle]="{ 'min-width': '75rem' }">
+                        <ng-template pTemplate="caption">
+                            <div class="flex justify-between items-center  ">
+                                <i class="pi pi-filter" (click)="toggleFilters()"></i>
+                                <p-iconField iconPosition="left" class="ml-auto">
+                                    <input pInputText type="text"
+                                        (input)="dt2.filterGlobal($event.target.value, 'contains')"
+                                        placeholder="Search keyword" />
+                                </p-iconField>
+                            </div>
+                        </ng-template>
+
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:22%">Name</th>
+                                <th style="width:22%">Country</th>
+                                <th style="width:22%">Agent</th>
+                                <th style="width:22%">Status</th>
+                                <th style="width:12%">Verified</th>
+                            </tr>
+                            <tr *ngIf="filtersVisible">
+                                <th>
+                                    <p-columnFilter type="text" field="name" placeholder="Search by name"
+                                        ariaLabel="Filter Name" />
+                                </th>
+                                <th>
+                                    <p-columnFilter type="text" field="country.name" placeholder="Search by country"
+                                        ariaLabel="Filter Country" />
+                                </th>
+                                <th>
+                                    <p-columnFilter type="text" field="country.name" placeholder="Search by country"
+                                        ariaLabel="Filter Country" />
+                                </th>
+                                <th></th>
+                                <th>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-customer>
+                            <tr>
+                                <td>
+                                    {{ customer.name }}
+                                </td>
+                                <td>
+                                    <span class="ml-1 vertical-align-middle">
+                                        {{ customer.country.name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="ml-1 vertical-align-middle">
+                                        {{ customer.representative.name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <p-tag [value]="customer.status" [severity]="getSeverity(customer.status)" />
+                                </td>
+                                <td>
+                                    <i class="pi"
+                                        [ngClass]="{ 'text-green-500 pi-check-circle': customer.verified, 'text-red-500 pi-times-circle': !customer.verified }"></i>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="5">No customers found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+
+            </div>
+        </div>
+    </div> -->
 </div>

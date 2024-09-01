@@ -99,20 +99,15 @@ export class AuthSignInComponent implements OnInit
                 {
                     // Re-enable the form
                     this.signInForm.enable();
+
                     // Reset the form
                     this.signInNgForm.resetForm();
 
-                    if(response.status==0){
-                        this.alert = {
-                            type   : 'error',
-                            message: 'Server is not responding',
-                        };
-                    }else {
-                        this.alert = {
-                            type   : 'error',
-                            message: 'Wrong email or password',
-                        };
-                    }
+                    // Set the alert
+                    this.alert = {
+                        type   : 'error',
+                        message: 'Wrong email or password',
+                    };
 
                     // Show the alert
                     this.showAlert = true;

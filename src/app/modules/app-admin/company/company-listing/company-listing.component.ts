@@ -1,43 +1,40 @@
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ListingHeaderComponent } from 'app/layout/layouts/shared-ui/listing-header/listing-header.component';
-import { HttpClientModule } from '@angular/common/http';
 import { CompanyService } from '../company.service';
-import { Subject, takeUntil } from 'rxjs';
-import { Company, displayedColumns } from '../company.interface';
-import { MatTableModule } from '@angular/material/table';
+import { Subject, takeUntil, finalize } from 'rxjs';
+import { Company, displayedColumns, dummyData } from '../company.interface';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { SWALMIXIN } from 'app/core/services/mixin.service';
-import { Button } from 'app/layout/primeng/app/components/button/button';
+import { ImportsModule } from './../imports';
 
 @Component({
     selector: 'app-company-listing',
     standalone: true,
-    imports: [
-        CommonModule,
-        ListingHeaderComponent,
-        MatTableModule,
-        HttpClientModule,
-        MatButtonModule,
-        Button
-    ],
+    imports: [MatButtonModule,ImportsModule,ListingHeaderComponent],
+    providers: [CompanyService],
     templateUrl: './company-listing.component.html',
     styleUrls: ['./company-listing.component.scss'],
 })
 export class CompanyListingComponent implements OnInit, OnDestroy {
+    selectedStatus: any;
+    filtersVisible: boolean = false;
+    isLoadingData:boolean=false
+    toggleFilters() {
+        this.filtersVisible = !this.filtersVisible;
+    }
     private _unsubscribeAll: Subject<void> = new Subject<void>();
     constructor(
         private companyService: CompanyService,
         private router: Router,
         private confirm: FuseConfirmationService
-    ) { }
+    ) {}
     companies: Company[] = [];
     displayedColumns: string[] = displayedColumns;
 
     ngOnInit(): void {
-        // this.companies = dummyData;
+        this.companies = dummyData;
         this.getCompaniesData();
     }
 
@@ -47,16 +44,18 @@ export class CompanyListingComponent implements OnInit, OnDestroy {
     }
 
     getCompaniesData() {
+        this.isLoadingData=true;
         this.companyService
             .getCompanies()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe({
                 next: (resp) => {
+                    console.log('resp: ', resp);
                     this.companies = resp;
+                    this.isLoadingData=false;
                 },
                 error: (err) => {
-                    console.log("err: ", err);
-
+                    this.isLoadingData=false;
                     SWALMIXIN.fire({
                         icon: 'error',
                         title: 'Please add customer basic detail first',
@@ -89,7 +88,7 @@ export class CompanyListingComponent implements OnInit, OnDestroy {
                             error: (err) => {
                                 SWALMIXIN.fire({
                                     icon: 'error',
-                                    title: err?.error.error,
+                                    title: 'Please add customer basic detail first',
                                 });
                             },
                         });
