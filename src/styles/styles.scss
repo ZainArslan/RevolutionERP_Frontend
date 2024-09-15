@@ -2,13 +2,12 @@
 /*  @ Import/write your custom styles here.
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
 /* ----------------------------------------------------------------------------------------------------- */
-// body,
-// body .p-component
-// {
-//   margin: 0;
-//   font-family: "Open Sans", sans-serif;
-//   background-color: #F7F6F3;
-// }
+body,
+body .p-component
+{
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
+}
 
 @font-face {
     font-family: 'Inter var';

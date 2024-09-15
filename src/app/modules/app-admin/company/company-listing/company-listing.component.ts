@@ -2,8 +2,8 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ListingHeaderComponent } from 'app/layout/layouts/shared-ui/listing-header/listing-header.component';
 import { CompanyService } from '../company.service';
-import { Subject, takeUntil, finalize } from 'rxjs';
-import { Company, displayedColumns, dummyData } from '../company.interface';
+import { Subject, takeUntil  } from 'rxjs';
+import { Company, displayedColumns } from '../company.interface';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { SWALMIXIN } from 'app/core/services/mixin.service';
@@ -34,7 +34,6 @@ export class CompanyListingComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = displayedColumns;
 
     ngOnInit(): void {
-        this.companies = dummyData;
         this.getCompaniesData();
     }
 
@@ -58,7 +57,7 @@ export class CompanyListingComponent implements OnInit, OnDestroy {
                     this.isLoadingData=false;
                     SWALMIXIN.fire({
                         icon: 'error',
-                        title: 'Please add customer basic detail first',
+                        title: err?.error?.message||err.message,
                     });
                 },
             });
@@ -78,6 +77,7 @@ export class CompanyListingComponent implements OnInit, OnDestroy {
             .afterClosed()
             .subscribe((res) => {
                 if (res == 'confirmed') {
+
                     this.companyService
                         .deleteCompanyById(id)
                         .pipe(takeUntil(this._unsubscribeAll))
@@ -88,7 +88,7 @@ export class CompanyListingComponent implements OnInit, OnDestroy {
                             error: (err) => {
                                 SWALMIXIN.fire({
                                     icon: 'error',
-                                    title: 'Please add customer basic detail first',
+                                    title: '',
                                 });
                             },
                         });

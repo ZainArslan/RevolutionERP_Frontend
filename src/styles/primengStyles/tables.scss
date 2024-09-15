@@ -10,3 +10,9 @@
     font-family: "Inter var", sans-serif !important;
     font-size: 14px !important;
 }
+
+.p-datatable.p-datatable-gridlines:has(.p-datatable-thead):has(.p-datatable-tbody) .p-datatable-tbody>tr>td {
+    border-width: 0 0 1px 1px;
+    padding: 7px 9px !important;
+    font-size: 14px !important;
+}

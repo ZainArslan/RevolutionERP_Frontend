@@ -20,8 +20,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { CompanyService } from '../company.service';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
-import { Organization } from '../company.interface';
+import { Organization, UploadEvent } from '../company.interface';
+import { FileUploadModule } from 'primeng/fileupload';
 import { SWALMIXIN } from 'app/core/services/mixin.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+// import { ImportsModule } from './../imports';
 
 @Component({
     selector: 'app-company-form',
@@ -40,9 +44,13 @@ import { SWALMIXIN } from 'app/core/services/mixin.service';
         MatButtonModule,
         MatSelectModule,
         MatOptionModule,
+        FileUploadModule,
+        ToastModule,
+        // ImportsModule
     ],
     templateUrl: './company-form.component.html',
     styleUrls: ['./company-form.component.scss'],
+    providers: [MessageService]
 })
 export class CompanyFormComponent implements OnInit {
     formFieldHelpers: string[] = [''];
@@ -50,12 +58,16 @@ export class CompanyFormComponent implements OnInit {
     viewInit: boolean = false;
     organizationsList: Organization[] = [];
     companyId: number;
+    primaryUserForm: FormGroup;
     private _unsubscribeAll: Subject<void> = new Subject<void>();
+    selectedImage: string | ArrayBuffer | null = null;
+
     constructor(
         private router: Router,
         private fb: FormBuilder,
         private companyService: CompanyService,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private messageService: MessageService
     ) {
         this.companyForm = this.fb.group({
             organizationId: ['', Validators.required],
@@ -64,12 +76,18 @@ export class CompanyFormComponent implements OnInit {
             phone: ['', Validators.required],
             address: ['', Validators.required],
             companyCode: [''],
+            referencePersonName: [''],
             registrationNo: [''],
             cityName: [''],
             province: [''],
             country: [''],
             status: [true],
         });
+        this.primaryUserForm = this.fb.group({
+            firstName: ['', Validators.required],
+            lastName: ['', Validators.required],
+            password: ['', Validators.required],
+        })
     }
 
     async ngOnInit() {
@@ -97,7 +115,7 @@ export class CompanyFormComponent implements OnInit {
                 error: (err) => {
                     SWALMIXIN.fire({
                         icon: 'error',
-                        title: 'Please add customer basic detail first',
+                        title: err?.error.message || err?.message,
                     });
                 },
             });
@@ -115,7 +133,7 @@ export class CompanyFormComponent implements OnInit {
                 error: (err) => {
                     SWALMIXIN.fire({
                         icon: 'error',
-                        title: 'Please add customer basic detail first',
+                        title: err?.error.message || err?.message,
                     });
                 },
             });
@@ -126,13 +144,12 @@ export class CompanyFormComponent implements OnInit {
     }
 
     handleFormSubmit() {
-        if (this.companyForm.invalid) {
-            this.companyForm.markAllAsTouched();
-            return;
-        }
+
+        if (this.notValidated()) return
+        let payload = this.getPayload();
 
         this.companyService
-            .saveCompany(this.companyForm.value)
+            .saveCompany(payload)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe({
                 next: (resp) => {
@@ -141,9 +158,56 @@ export class CompanyFormComponent implements OnInit {
                 error: (err) => {
                     SWALMIXIN.fire({
                         icon: 'error',
-                        title: 'Please add customer basic detail first',
+                        title: err?.error.message || err?.message,
                     });
                 },
             });
+    }
+
+    notValidated() {
+        if (this.companyForm.invalid) {
+            this.companyForm.markAllAsTouched();
+            this.primaryUserForm.markAllAsTouched();
+            return true;
+        }
+        if (this.primaryUserForm.invalid && !this.companyId) {
+            return true;
+        }
+
+        if (!this.selectedImage) {
+            SWALMIXIN.fire({
+                icon: 'error',
+                title: "Company image is required",
+            });
+            return true;
+        }
+        return false
+    }
+
+    getPayload() {
+        let payload;
+        console.log("uploaded files: ", this.selectedImage);
+        if (this.companyId) {
+            payload = this.companyForm.value
+        } else {
+            payload = { ...this.companyForm.value, ...this.primaryUserForm.value, companyImage: this.selectedImage?.toString()?.split(',')[1] }
+        }
+
+
+        return payload;
+    }
+
+
+    onFileChange(event: any): void {
+        const file = event.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.selectedImage = reader.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please select an image file.');
+        }
     }
 }
