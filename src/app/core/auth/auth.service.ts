@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
@@ -14,9 +14,8 @@ export class AuthService {
      */
     constructor(
         private _httpClient: HttpClient,
-        private _userService: UserService,
-    ) {
-    }
+        private _userService: UserService
+    ) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -60,29 +59,36 @@ export class AuthService {
      *
      * @param credentials
      */
-    signIn(credentials: { userName: string; password: string }): Observable<any> {
+    signIn(credentials: {
+        UserName: string;
+        Password: string;
+    }): Observable<any> {
         // Throw error, if the user is already logged in
         if (this._authenticated) {
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post(environment.apiUrl + 'login', credentials).pipe(
-            // return this._httpClient.post('api/auth/sign-in', credentials).pipe(
-            switchMap((response: any) => {
-                // this.accessToken = response.accessToken;
-                console.log("response: ", response);
-                this.accessToken = response?.token?.result;
-                // // Set the authenticated flag to true
-                this._authenticated = true;
-                localStorage.setItem("user", JSON.stringify(response?.user))
+        const params = new HttpParams()
+            .set('UserName', credentials.UserName)
+            .set('Password', credentials.Password);
 
-                // // Store the user on the user service
-                this._userService.user = response.user[0];
-
-                // Return a new observable with the response
-                return of(response);
-            }),
-        );
+        return this._httpClient
+            .post(environment.apiUrl + 'login', null, {
+                params,
+            })
+            .pipe(
+                switchMap((response: any) => {
+                    console.log('response: ', response);
+                    this.accessToken = response?.token?.result;
+                    this._authenticated = true;
+                    localStorage.setItem(
+                        'user',
+                        JSON.stringify(response?.user)
+                    );
+                    this._userService.user = response.user[0];
+                    return of(response);
+                })
+            );
     }
 
     // /**
@@ -90,29 +96,30 @@ export class AuthService {
     //  */
     signInUsingToken(): Observable<any> {
         // Sign in using the token
-        return this._httpClient.post('api/auth/sign-in-with-token', {
-            accessToken: this.accessToken,
-        }).pipe(
-            catchError(() =>
+        return this._httpClient
+            .post('api/auth/sign-in-with-token', {
+                accessToken: this.accessToken,
+            })
+            .pipe(
+                catchError(() =>
+                    // Return false
+                    of(false)
+                ),
+                switchMap((response: any) => {
+                    if (response.accessToken) {
+                        this.accessToken = response.accessToken;
+                    }
 
-                // Return false
-                of(false),
-            ),
-            switchMap((response: any) => {
-                if (response.accessToken) {
-                    this.accessToken = response.accessToken;
-                }
+                    // Set the authenticated flag to true
+                    this._authenticated = true;
 
-                // Set the authenticated flag to true
-                this._authenticated = true;
+                    // Store the user on the user service
+                    this._userService.user = response.user;
 
-                // Store the user on the user service
-                this._userService.user = response.user;
-
-                // Return true
-                return of(true);
-            }),
-        );
+                    // Return true
+                    return of(true);
+                })
+            );
     }
 
     /**
@@ -134,7 +141,12 @@ export class AuthService {
      *
      * @param user
      */
-    signUp(user: { name: string; email: string; password: string; company: string }): Observable<any> {
+    signUp(user: {
+        name: string;
+        email: string;
+        password: string;
+        company: string;
+    }): Observable<any> {
         return this._httpClient.post('api/auth/sign-up', user);
     }
 
@@ -143,7 +155,10 @@ export class AuthService {
      *
      * @param credentials
      */
-    unlockSession(credentials: { email: string; password: string }): Observable<any> {
+    unlockSession(credentials: {
+        email: string;
+        password: string;
+    }): Observable<any> {
         return this._httpClient.post('api/auth/unlock-session', credentials);
     }
 

@@ -17,6 +17,7 @@ export class ListingHeaderComponent {
 
   @Input() pageTitle: string;
   @Input() searchEnabled: boolean=true;
+  @Input() wantAddButton: boolean=true;
   @Input() redirectButtonTitle: string;
   @Output() searchValue: EventEmitter<string> = new EventEmitter<string>();
   @Output() handleRedirectClick: EventEmitter<boolean> = new EventEmitter<boolean>();

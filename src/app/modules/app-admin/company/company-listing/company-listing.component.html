@@ -9,10 +9,9 @@
                     <p-table #dt2 [value]="companies" dataKey="id" [rows]="10" [rowsPerPageOptions]="[5,10, 25, 50]"
                         [loading]="isLoadingData" [paginator]="true"
                         [globalFilterFields]="['companyName', 'companyCode', 'registrationNo', 'email','phone','address','cityName','province','country']"
-                        [tableStyle]="{ 'min-width': '75rem' }" styleClass="p-datatable-gridlines" >
+                        [tableStyle]="{ 'min-width': '75rem' }" styleClass="p-datatable-gridlines">
                         <ng-template pTemplate="caption">
                             <div class="flex justify-between items-center  ">
-                                <!-- <i class="pi pi-filter" (click)="toggleFilters()"></i> -->
                                 <p-iconField iconPosition="left" class="ml-auto">
                                     <input pInputText type="text"
                                         (input)="dt2.filterGlobal($event.target.value, 'contains')"
@@ -37,8 +36,8 @@
                             </tr>
                             <tr *ngIf="filtersVisible">
                                 <th>
-                                    <p-columnFilter type="text" style="width: 99px !important" field="companyName" placeholder="Search by name"
-                                        ariaLabel="Filter Name" />
+                                    <p-columnFilter type="text" style="width: 99px !important" field="companyName"
+                                        placeholder="Search by name" ariaLabel="Filter Name" />
                                 </th>
                                 <th>
                                     <p-columnFilter type="text" field="companyCode" placeholder="Search by Company code"
@@ -106,10 +105,17 @@
                                         [ngClass]="{ 'text-green-500 pi-check-circle': company?.status, 'text-red-500 pi-times-circle': !company.status }"></i>
                                 </td>
 
-                                <td class="fixed-column"> 
+                                <td class="fixed-column">
                                     <span class="ml-1 vertical-align-middle flex">
-                                        <button pButton pRipple type="button" icon="pi pi-pencil" (click)="goToForm(company.organizationId)" class="p-button-text"></button>
-                                        <button pButton pRipple type="button" icon="pi pi-trash" (click)="deleteCompany(company.organizationId)" class="p-button-text text-red-500">Deactivate</button>
+                                        <button pButton pRipple type="button" icon="pi pi-pencil"
+                                            (click)="goToForm(company.companyId)" class="p-button-text"></button>
+                                        <button *ngIf="company?.status" pButton pRipple type="button" icon="pi pi-trash"
+                                            (click)="deleteCompany(company.companyId,false)"
+                                            class="p-button-text text-red-500">Deactivate</button>
+                                        <button *ngIf="!company?.status" pButton pRipple type="button"
+                                            icon="pi pi-trash"
+                                            (click)="deleteCompany(company.companyId,true)"
+                                            class="p-button-text text-green-500">Activate</button>
                                     </span>
                                 </td>
 

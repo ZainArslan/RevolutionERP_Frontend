@@ -50,7 +50,7 @@ import { ToastModule } from 'primeng/toast';
     ],
     templateUrl: './company-form.component.html',
     styleUrls: ['./company-form.component.scss'],
-    providers: [MessageService]
+    providers: [MessageService],
 })
 export class CompanyFormComponent implements OnInit {
     formFieldHelpers: string[] = [''];
@@ -87,7 +87,7 @@ export class CompanyFormComponent implements OnInit {
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
             password: ['', Validators.required],
-        })
+        });
     }
 
     async ngOnInit() {
@@ -111,6 +111,8 @@ export class CompanyFormComponent implements OnInit {
             .subscribe({
                 next: (resp) => {
                     console.log('resp: ', resp);
+                    this.companyForm.patchValue(resp);
+                    this.bindDataForEditCase(resp);
                 },
                 error: (err) => {
                     SWALMIXIN.fire({
@@ -121,6 +123,10 @@ export class CompanyFormComponent implements OnInit {
             });
     }
 
+    bindDataForEditCase(data) {
+        console.log('bindDataForEditCase', data);
+    }
+
     getAllOrganizations() {
         this.companyService
             .getAllOrganizations()
@@ -128,7 +134,6 @@ export class CompanyFormComponent implements OnInit {
             .subscribe({
                 next: (resp) => {
                     this.organizationsList = resp;
-                    console.log('resp: ', resp);
                 },
                 error: (err) => {
                     SWALMIXIN.fire({
@@ -140,16 +145,36 @@ export class CompanyFormComponent implements OnInit {
     }
 
     redirectToListing() {
-        this.router.navigateByUrl('app-admin/company');
+        this.router.navigateByUrl('app-admin/company/listing');
     }
 
     handleFormSubmit() {
-
-        if (this.notValidated()) return
+        if (this.notValidated()) return;
         let payload = this.getPayload();
 
+        if (this.companyId) {
+            this.updateCompany(payload);
+            return;
+        }
         this.companyService
             .saveCompany(payload)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe({
+                next: (resp) => {
+                    this.redirectToListing();
+                },
+                error: (err) => {
+                    SWALMIXIN.fire({
+                        icon: 'error',
+                        title: err?.error.message || err?.message,
+                    });
+                },
+            });
+    }
+
+    updateCompany(payload) {
+        this.companyService
+            .updateCompany(payload)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe({
                 next: (resp) => {
@@ -174,29 +199,41 @@ export class CompanyFormComponent implements OnInit {
             return true;
         }
 
-        if (!this.selectedImage) {
-            SWALMIXIN.fire({
-                icon: 'error',
-                title: "Company image is required",
-            });
-            return true;
-        }
-        return false
+        // if (!this.selectedImage) {
+        //     SWALMIXIN.fire({
+        //         icon: 'error',
+        //         title: 'Company image is required',
+        //     });
+        //     return true;
+        // }
+        return false;
     }
 
     getPayload() {
         let payload;
-        console.log("uploaded files: ", this.selectedImage);
         if (this.companyId) {
-            payload = this.companyForm.value
+            payload = {
+                ...this.companyForm.value,
+                companyId: this.companyId,
+                FirstName: '',
+                LastName: '',
+                Password: '',
+                companyImage: this.selectedImage
+                    ? this.selectedImage?.toString()?.split(',')[1]
+                    : '',
+            };
         } else {
-            payload = { ...this.companyForm.value, ...this.primaryUserForm.value, companyImage: this.selectedImage?.toString()?.split(',')[1] }
+            payload = {
+                ...this.companyForm.value,
+                ...this.primaryUserForm.value,
+                companyImage: this.selectedImage
+                    ? this.selectedImage?.toString()?.split(',')[1]
+                    : '',
+            };
         }
-
 
         return payload;
     }
-
 
     onFileChange(event: any): void {
         const file = event.target.files[0];

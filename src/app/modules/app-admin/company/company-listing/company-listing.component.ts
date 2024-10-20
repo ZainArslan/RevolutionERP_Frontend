@@ -2,17 +2,17 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ListingHeaderComponent } from 'app/layout/layouts/shared-ui/listing-header/listing-header.component';
 import { CompanyService } from '../company.service';
-import { Subject, takeUntil  } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Company, displayedColumns } from '../company.interface';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { SWALMIXIN } from 'app/core/services/mixin.service';
-import { ImportsModule } from './../imports';
+import { ImportsModule } from 'app/core/shared/primeNg-Imports';
 
 @Component({
     selector: 'app-company-listing',
     standalone: true,
-    imports: [MatButtonModule,ImportsModule,ListingHeaderComponent],
+    imports: [MatButtonModule, ImportsModule, ListingHeaderComponent],
     providers: [CompanyService],
     templateUrl: './company-listing.component.html',
     styleUrls: ['./company-listing.component.scss'],
@@ -20,7 +20,7 @@ import { ImportsModule } from './../imports';
 export class CompanyListingComponent implements OnInit, OnDestroy {
     selectedStatus: any;
     filtersVisible: boolean = false;
-    isLoadingData:boolean=false
+    isLoadingData: boolean = false;
     toggleFilters() {
         this.filtersVisible = !this.filtersVisible;
     }
@@ -43,21 +43,20 @@ export class CompanyListingComponent implements OnInit, OnDestroy {
     }
 
     getCompaniesData() {
-        this.isLoadingData=true;
+        this.isLoadingData = true;
         this.companyService
             .getCompanies()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe({
                 next: (resp) => {
-                    console.log('resp: ', resp);
                     this.companies = resp;
-                    this.isLoadingData=false;
+                    this.isLoadingData = false;
                 },
                 error: (err) => {
-                    this.isLoadingData=false;
+                    this.isLoadingData = false;
                     SWALMIXIN.fire({
                         icon: 'error',
-                        title: err?.error?.message||err.message,
+                        title: err?.error?.message || err.message,
                     });
                 },
             });
@@ -71,15 +70,14 @@ export class CompanyListingComponent implements OnInit, OnDestroy {
         else this.router.navigateByUrl('app-admin/company/company-form');
     }
 
-    deleteCompany(id: number) {
+    deleteCompany(id: number, status: boolean) {
         this.confirm
             .open()
             .afterClosed()
             .subscribe((res) => {
                 if (res == 'confirmed') {
-
                     this.companyService
-                        .deleteCompanyById(id)
+                        .deleteCompanyById(id, status)
                         .pipe(takeUntil(this._unsubscribeAll))
                         .subscribe({
                             next: (resp) => {
@@ -88,7 +86,7 @@ export class CompanyListingComponent implements OnInit, OnDestroy {
                             error: (err) => {
                                 SWALMIXIN.fire({
                                     icon: 'error',
-                                    title: '',
+                                    title: err?.error?.message || err.message,
                                 });
                             },
                         });

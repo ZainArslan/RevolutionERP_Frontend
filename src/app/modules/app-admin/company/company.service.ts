@@ -9,12 +9,12 @@ import { environment } from 'environments/environment.development';
 export class CompanyService {
     constructor(private http: HttpClient) {}
     headers = new HttpHeaders({
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
     });
 
     getCompanies() {
         const url = `${environment.apiUrl}Companys/GetAllCompanies`;
-        return this.http.get<any>(url,{headers:this.headers});
+        return this.http.get<any>(url, { headers: this.headers });
     }
 
     getCompaniesById(id: number) {
@@ -35,10 +35,19 @@ export class CompanyService {
         return this.http.post(`${environment.apiUrl}Companys/Insert`, Company);
     }
 
-    deleteCompanyById(id: number) {
-        return this.http.delete(`${environment.apiUrl}Companys/Delete`, {
-            params: new HttpParams().set('id', id.toString()),
-            headers:this.headers
-        });
+    updateCompany(Company: Company) {
+        return this.http.post(`${environment.apiUrl}Companys/Update`, Company);
+    }
+
+    deleteCompanyById(id: number, status: boolean) {
+        return this.http.delete(
+            `${environment.apiUrl}Companys/UpdateCompanyStatus`,
+            {
+                params: new HttpParams()
+                    .set('id', id.toString())
+                    .set('Status', status),
+                headers: this.headers,
+            }
+        );
     }
 }
