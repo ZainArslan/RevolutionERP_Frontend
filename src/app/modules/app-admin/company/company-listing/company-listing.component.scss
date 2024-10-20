@@ -1,0 +1,34 @@
+/* Ensure the table container is positioned relatively */
+.p-table {
+    position: relative;
+}
+
+/* Fix the action column */
+.fixed-column {
+    position: -webkit-sticky;
+    /* For Safari */
+    position: sticky;
+    right: 0;
+    background: white;
+    /* Background color to cover other columns */
+    z-index: 1;
+    /* Ensure it is above other columns */
+}
+
+/* Adjust the table layout to account for the fixed column */
+.p-table {
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+}
+
+/* Ensure the last column (action) is still visible on scroll */
+.p-table .p-datatable-tbody td:last-child,
+.p-table .p-datatable-thead th:last-child {
+    position: sticky;
+    right: 0;
+    background: white;
+    /* Match the background color with your table */
+    z-index: 2;
+    /* Ensure it stays on top */
+}

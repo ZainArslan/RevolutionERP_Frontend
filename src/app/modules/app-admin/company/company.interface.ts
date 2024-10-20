@@ -27,6 +27,12 @@ export interface Organization {
     status: boolean;
 }
 
+export interface UploadEvent {
+    originalEvent: Event;
+    files: File[];
+}
+
+
 export const displayedColumns: string[] = [
     'companyName',
     'companyCode',
@@ -38,61 +44,4 @@ export const displayedColumns: string[] = [
     'action',
 ];
 
-export const dummyData: Company[] = [
-    {
-        companyId: 1,
-        organizationId: 1,
-        companyName: 'Testing',
-        companyCode: 'string',
-        registrationNo: 'string',
-        email: 'string',
-        phone: 'string',
-        address: 'string',
-        cityName: 1,
-        province: 2,
-        country: 2,
-        status: true,
-    },
-    {
-        companyId: 1,
-        organizationId: 1,
-        companyName: 'Testing',
-        companyCode: 'string',
-        registrationNo: 'string',
-        email: 'string',
-        phone: 'string',
-        address: 'string',
-        cityName: 1,
-        province: 2,
-        country: 2,
-        status: true,
-    },
-    {
-        companyId: 1,
-        organizationId: 1,
-        companyName: 'Testing',
-        companyCode: 'string',
-        registrationNo: 'string',
-        email: 'string',
-        phone: 'string',
-        address: 'string',
-        cityName: 1,
-        province: 2,
-        country: 2,
-        status: true,
-    },
-    {
-        companyId: 1,
-        organizationId: 1,
-        companyName: 'Testing',
-        companyCode: 'string',
-        registrationNo: 'string',
-        email: 'string',
-        phone: 'string',
-        address: 'string',
-        cityName: 1,
-        province: 2,
-        country: 2,
-        status: true,
-    },
-];
+

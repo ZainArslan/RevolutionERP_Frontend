@@ -2,13 +2,12 @@
 /*  @ Import/write your custom styles here.
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
 /* ----------------------------------------------------------------------------------------------------- */
-// body,
-// body .p-component
-// {
-//   margin: 0;
-//   font-family: "Open Sans", sans-serif;
-//   background-color: #F7F6F3;
-// }
+body,
+body .p-component
+{
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
+}
 
 @font-face {
     font-family: 'Inter var';
@@ -20,6 +19,7 @@
 }
 
 @import url(./primengStyles/primeNgStyle.scss);
+@import url(./material-styles/index.scss);
 body {
     background-color: var(--surface-a);
     font-family: "Inter var", sans-serif;

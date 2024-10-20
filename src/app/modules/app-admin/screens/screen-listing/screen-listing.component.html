@@ -1,0 +1,62 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-auto bg-card dark:bg-transparent">
+    <app-listing-header [pageTitle]="'Screens'" [redirectButtonTitle]="'Add'" [searchEnabled]="false"
+        [wantAddButton]="false"></app-listing-header>
+
+    <div class="container p-4">
+
+        <button class="m-3" [color]="'primary'" mat-raised-button (click)="openModal('module')">
+            Module
+        </button>
+
+        <button class="m-3" [color]="'primary'" mat-raised-button (click)="openModal('submodule')">
+            Submodule
+        </button>
+
+        <div class="py-4" *ngIf="isAddingModule">
+            <div class="flex">
+                <mat-form-field class="w-full">
+                    <input matInput formControlName="companyName" />
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                </mat-form-field>
+                <button [color]="'primary'" mat-raised-button (click)="isAddingModule = !isAddingModule">
+                    Add
+                </button>
+            </div>
+        </div>
+
+        <div class="popup-container">
+            <p-accordion [activeIndex]="0">
+                <p-accordionTab>
+                    <ng-template pTemplate="header">
+                        <div class="custom-header">
+                            <span class="header-text">Custom Header with Icon</span>
+
+                        </div>
+                    </ng-template>
+
+                    <h4>Main Tab Content</h4>
+                    <p-button rounded="true" label="Add Module" styleClass="p-button"
+                        (click)="isAddingModule = !isAddingModule" />
+
+                    <p-accordion>
+                        <p-accordionTab header="Nested Accordion Tab 1">
+                            <p>Content for Nested Accordion Tab 1</p>
+                        </p-accordionTab>
+                        <p-accordionTab header="Nested Accordion Tab 2">
+                            <p>Content for Nested Accordion Tab 2</p>
+                        </p-accordionTab>
+                    </p-accordion>
+                </p-accordionTab>
+
+                <p-accordionTab header="Another Main Tab">
+                    <h4>Another Main Tab Content</h4>
+                </p-accordionTab>
+            </p-accordion>
+
+            <div class="button-group">
+                <button mat-button mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<br />

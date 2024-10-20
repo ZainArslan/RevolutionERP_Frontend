@@ -5,6 +5,21 @@
     <div class="p-3 flex-auto">
         <form [formGroup]="companyForm" (ngSubmit)="handleFormSubmit()"
             class="flex flex-col mt-8 p-8 pb-4 bg-card rounded-2xl shadow space-y-4">
+
+
+            <div class="image_wrape flex items-center">
+                <div class="image w-28 h-28 border-2 rounded-full"><img
+                        class="w-full h-full object-contain rounded-full"
+                        [src]="selectedImage||'assets/images/avatars/user_placeholder.png'" alt="">
+                </div>
+                <div class="ml-2">
+                    <input type="file" id="fileInput" (change)="onFileChange($event)" accept="image/*" class="hidden" />
+                    <label for="fileInput" class="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">
+                        Choose Profile
+                    </label>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
                     <mat-form-field appearance="fill" class="w-full">
@@ -43,11 +58,17 @@
                 </div>
                 <div>
                     <mat-form-field class="w-full">
+                        <mat-label>Reference person</mat-label>
+                        <input matInput formControlName="referencePersonName">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="w-full">
                         <mat-label>Phone</mat-label>
                         <input matInput formControlName="phone">
                     </mat-form-field>
                 </div>
-                <div>
+                <div class="sm:col-span-2 lg:col-span-2">
                     <mat-form-field class="w-full">
                         <mat-label>Address</mat-label>
                         <input matInput formControlName="address">
@@ -72,6 +93,37 @@
                     </mat-form-field>
                 </div>
             </div>
+
+            <div id="primaryUserInfo" *ngIf="!companyId">
+                <div class="div">
+                    <p class="m-0 p-0 text-2xl font-bold underline decoration-double pb-5 underline-offset-8">Primary
+                        user info </p>
+                </div>
+                <form [formGroup]="primaryUserForm" *ngIf="!companyId">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                        <div>
+                            <mat-form-field class="w-full">
+                                <mat-label>First Name</mat-label>
+                                <input matInput formControlName="firstName">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field class="w-full">
+                                <mat-label>Last name</mat-label>
+                                <input matInput formControlName="lastName">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field class="w-full">
+                                <mat-label>Password</mat-label>
+                                <input type="password" matInput formControlName="password">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             <div class="flex justify-end mt-4">
                 <button type="submit" mat-raised-button color="primary">Submit</button>
             </div>

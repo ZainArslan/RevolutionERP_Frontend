@@ -81,7 +81,7 @@ export class AuthSignInComponent implements OnInit
         this.showAlert = false;
 
         // Sign in
-        this._authService.signIn({userName:this.signInForm.value.email,password:this.signInForm.value.password})
+        this._authService.signIn({UserName:this.signInForm.value.email,Password:this.signInForm.value.password})
             .subscribe(
                 () =>
                 {

@@ -5,18 +5,19 @@
         <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
     </div>
     <!-- Title -->
-    <div class="text-4xl font-extrabold tracking-tight">{{pageTitle}}</div>
+    <div class="text-4xl font-extrabold tracking-tight">{{ pageTitle }}</div>
     <!-- Actions -->
     <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
         <!-- Search -->
-        <mat-form-field *ngIf="searchEnabled" class="fuse-mat-dense fuse-mat-rounded min-w-64" [subscriptSizing]="'dynamic'">
+        <mat-form-field *ngIf="searchEnabled" class="fuse-mat-dense fuse-mat-rounded min-w-64"
+            [subscriptSizing]="'dynamic'">
             <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
-            <input matInput [formControl]="searchInputControl" [autocomplete]="'off'" [placeholder]="'Search...'">
+            <input matInput [formControl]="searchInputControl" [autocomplete]="'off'" [placeholder]="'Search...'" />
         </mat-form-field>
         <!-- Add product button -->
-        <button class="ml-4" mat-flat-button [color]="'primary'" (click)="handleRedirect()">
+        <button *ngIf="wantAddButton" class="ml-4" mat-flat-button [color]="'primary'" (click)="handleRedirect()">
             <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-            <span class="ml-2 mr-1">{{redirectButtonTitle}}</span>
+            <span class="ml-2 mr-1">{{ redirectButtonTitle }}</span>
         </button>
     </div>
 </div>
